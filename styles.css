@@ -1172,6 +1172,107 @@ tr:hover td{background:rgba(255,255,255,0.03)}
 
 
 
+
+/* COMMAND PALETTE */
+.command-palette {
+  width: 100%;
+  max-width: 600px;
+  background: var(--bg2);
+  backdrop-filter: blur(25px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.05);
+  overflow: hidden;
+  animation: slideInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideInDown {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.command-header {
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+#command-input {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 1.1rem;
+  width: 100%;
+  outline: none;
+  font-family: inherit;
+}
+.command-results {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+.command-item {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s;
+  color: var(--text2);
+}
+.command-item:hover, .command-item.selected {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  transform: translateX(4px);
+}
+.command-item b { color: var(--verde); font-weight: 600; }
+.command-footer {
+  padding: 0.8rem 1.25rem;
+  background: rgba(0,0,0,0.2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--text3);
+}
+
+/* MAPA INTERACTIVO */
+.map-container {
+  background: var(--bg2);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.map-svg {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+}
+.map-room {
+  fill: rgba(255,255,255,0.05);
+  stroke: var(--border);
+  stroke-width: 1;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.map-room:hover {
+  fill: rgba(255,255,255,0.15);
+  stroke: var(--verde);
+}
+.map-room.room-absent { fill: rgba(255, 68, 68, 0.2); stroke: var(--rojo); }
+.map-room.room-present { fill: rgba(0, 230, 118, 0.1); stroke: var(--verde); }
+.map-label {
+  font-size: 10px;
+  fill: var(--text2);
+  pointer-events: none;
+  text-anchor: middle;
+}
+
 /* RESPONSIVE */
 
 @media(max-width:768px){

@@ -6,6 +6,28 @@ const DIAS = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
 const HORAS = ['07:30','08:20','09:10','10:00','10:50','11:40','12:30','13:20','14:10','15:00'];
 
+//                 TRADUCCIONES                
+const TEXTS = {
+  es: {
+    dashboard: 'Panel general', ausencias: 'Registro de ausencias', horarios: 'Horario semanal', profesores: 'Profesores', reportes: 'Reportes',
+    mapa: 'Mapa interactivo', welcome: '¡Bienvenido de nuevo!', logout: 'Salir', search: 'Buscar...', new_aus: '+ Nueva ausencia',
+    lang_name: 'ESP', lang_flag: '🇦🇷'
+  },
+  en: {
+    dashboard: 'General Dashboard', ausencias: 'Absence Registry', horarios: 'Weekly Schedule', profesores: 'Teachers', reportes: 'Reports',
+    mapa: 'Interactive Map', welcome: 'Welcome back!', logout: 'Logout', search: 'Search...', new_aus: '+ New Absence',
+    lang_name: 'ENG', lang_flag: '🇺🇸'
+  }
+};
+let currentLang = localStorage.getItem('lang') || 'es';
+const T = (key) => TEXTS[currentLang][key] || key;
+
+function toggleLang() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  localStorage.setItem('lang', currentLang);
+  location.reload();
+}
+
 
 
 const PROFESORES = [
@@ -154,11 +176,10 @@ function buildNav(){
 
       {id:'ausencias',icon:'📋',label:'Todas las ausencias'},
 
-      {id:'horarios',icon:'🗓️',label:'Horario semanal'},
-
-      {section:'Gestión'},
-
-      {id:'profesores',icon:'👨‍🏫',label:'Profesores'},
+      {id:'horarios',icon:'🗓️',label:T('horarios')},
+      {id:'mapa',icon:'📍',label:T('mapa')},
+      {section:T('reportes')||'Gestión'},
+      {id:'profesores',icon:'👨‍🏫',label:T('profesores')},
 
       {id:'reportes',icon:'📈',label:'Reportes'},
 
@@ -236,6 +257,7 @@ function showPage(id){
     'mi-horario': renderMiHorario,
     'vista-alumno': renderVistaAlumno,
     'semana-alumno': renderSemanaAlumno,
+    'mapa': renderMapa,
   };
 
   if(renders[id]) area.innerHTML = `<div class="page active">${renders[id]()}</div>`;
@@ -257,7 +279,7 @@ function renderDashboard(){
       <div class="stats-row" style="grid-template-columns:repeat(3,1fr)">
         <div class="stat-card"><div class="stat-num" style="color:var(--amarillo)">${misPend.length}</div><div class="stat-label">Ausencias pendientes</div></div>
         <div class="stat-card"><div class="stat-num" style="color:var(--verde)">${mis.filter(a=>a.estado==='aprobada').length}</div><div class="stat-label">Aprobadas</div></div>
-        <div class="stat-card"><div class="stat-num">${mis.length}</div><div class="stat-label">Total registradas</div></div>
+        <div class="stat-card" onclick="openModal('modal-logros')" style="cursor:pointer"><div class="stat-num" style="color:var(--violeta)">🏆</div><div class="stat-label">Mis Logros</div></div>
       </div>
       <div class="alert alert-info">ℹ️  Recordá adjuntar el certificado médico dentro de las 48hs de tu ausencia.</div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
@@ -1238,6 +1260,7 @@ function submitAusencia(){
 
   AUSENCIAS.unshift(nueva);
   showToast('¡Ausencia registrada correctamente!', 'success');
+  checkAchievements();
   closeModal('modal-ausencia');
   showPage('mis-ausencias');
 }
@@ -1409,4 +1432,75 @@ if ('serviceWorker' in navigator) {
       .then(reg => console.log('Service Worker registrado', reg))
       .catch(err => console.log('Error al registrar SW', err));
   });
+}
+
+//                 MAPA INTERACTIVO                
+function renderMapa() {
+  const hoy = new Date().toISOString().split('T')[0];
+  const ausHoy = AUSENCIAS.filter(a=>a.inicio<=hoy&&a.fin>=hoy&&a.estado==='aprobada').map(a=>a.profNombre);
+  
+  return `
+    <div class="page-title">${T('mapa')}</div>
+    <div class="page-sub">Estado de ocupación de aulas en tiempo real</div>
+    <div class="map-container">
+      <svg viewBox="0 0 800 400" class="map-svg">
+        <!-- PLANTA BAJA -->
+        <rect x="50" y="50" width="150" height="100" class="map-room ${ausHoy.some(n=>n.includes('García'))?'room-absent':'room-present'}" onclick="showToast('Aula 1: Matemáticas')"/>
+        <text x="125" y="105" class="map-label">Aula 1</text>
+        
+        <rect x="210" y="50" width="150" height="100" class="map-room room-present" onclick="showToast('Aula 2: Lengua')"/>
+        <text x="285" y="105" class="map-label">Aula 2</text>
+        
+        <rect x="370" y="50" width="150" height="100" class="map-room ${ausHoy.some(n=>n.includes('Pérez'))?'room-absent':'room-present'}" onclick="showToast('Aula 3: Historia')"/>
+        <text x="445" y="105" class="map-label">Aula 3</text>
+        
+        <rect x="50" y="160" width="150" height="100" class="map-room room-present" onclick="showToast('Laboratorio')"/>
+        <text x="125" y="215" class="map-label">LAB</text>
+        
+        <!-- PASILLO -->
+        <rect x="210" y="160" width="310" height="50" style="fill:rgba(255,255,255,0.02);stroke:var(--border)"/>
+        <text x="365" y="190" class="map-label" style="font-size:12px">Pasillo Principal</text>
+        
+        <rect x="530" y="50" width="220" height="210" class="map-room room-present" onclick="showToast('Gimnasio')"/>
+        <text x="640" y="155" class="map-label" style="font-size:14px">GIMNASIO</text>
+      </svg>
+    </div>
+    <div class="alert alert-info" style="margin-top:1.5rem">💡 Haz clic en cualquier aula para ver el estado detallado.</div>`;
+}
+
+//                 GAMIFICACIÓN                
+function checkAchievements() {
+  const mis = AUSENCIAS.filter(a=>a.profId===1);
+  if (mis.length === 1 && !localStorage.getItem('ach_first')) {
+    openAchievement('¡Primer Registro!', 'Has registrado tu primera ausencia en el sistema. ¡Bienvenido a bordo!');
+    localStorage.setItem('ach_first', true);
+  }
+}
+
+function openAchievement(title, desc) {
+  document.getElementById('logro-titulo').textContent = title;
+  document.getElementById('logro-desc').textContent = desc;
+  openModal('modal-logros');
+}
+
+//                 COMMAND PALETTE (LOGIC)                
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'k') { e.preventDefault(); openModal('modal-command'); document.getElementById('command-input').focus(); }
+  if (e.key === 'Escape') closeModal('modal-command');
+});
+
+function searchCommands(val) {
+  const results = document.getElementById('command-results');
+  if (!val) { results.innerHTML = ''; return; }
+  const options = [
+    {id:'dashboard', label: T('dashboard'), icon:'📊'},
+    {id:'mapa', label: T('mapa'), icon:'📍'},
+    {id:'horarios', label: T('horarios'), icon:'🗓️'},
+    {id:'profesores', label: T('profesores'), icon:'👨‍🏫'}
+  ];
+  const filtered = options.filter(o => o.label.toLowerCase().includes(val.toLowerCase()));
+  results.innerHTML = filtered.map(o => `
+    <div class="command-item" onclick="showPage('${o.id}'); closeModal('modal-command')">
+      <span>${o.icon}</span> ${o.label}
+    </div>`).join('');
 }

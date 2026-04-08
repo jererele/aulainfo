@@ -98,7 +98,9 @@
       <span class="user-name" id="topbar-user"></span>
 
       <span class="role-badge" id="topbar-badge"></span>
-
+      <div class="lang-switcher" onclick="toggleLang()" id="lang-btn">
+        <span class="lang-flag">🇦🇷</span> <span class="lang-name">ES</span>
+      </div>
       <button class="btn-logout" onclick="logout()">Salir</button>
 
     </div>
@@ -242,6 +244,31 @@
   </div>
 
 </div>
+<!-- MODAL LOGROS -->
+<div class="modal-overlay" id="modal-logros">
+  <div class="modal" style="max-width: 400px; text-align: center">
+    <div class="achievement-icon" style="font-size: 4rem; margin-bottom: 1rem">🏆</div>
+    <div class="modal-title" id="logro-titulo">¡Nuevo Logro!</div>
+    <p id="logro-desc" style="color: var(--text2); margin: 1rem 0 2rem"></p>
+    <button class="btn btn-primary" onclick="closeModal('modal-logros')" style="width: 100%">¡Genial!</button>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div class="modal-overlay" id="modal-command" style="align-items: flex-start; padding-top: 10vh; background: rgba(0,0,0,0.8)">
+  <div class="command-palette">
+    <div class="command-header">
+      <span style="font-size: 1.2rem">🔍</span>
+      <input type="text" id="command-input" placeholder="Buscar comando, profesor o sección... (Esc)" oninput="searchCommands(this.value)">
+    </div>
+    <div class="command-results" id="command-results"></div>
+    <div class="command-footer">
+      <span><b>ENTER</b> seleccionar</span>
+      <span><b>ESC</b> cerrar</span>
+    </div>
+  </div>
+</div>
+
   <script src="app.js"></script>
   <script src="cosmos.js"></script>
 </body>
