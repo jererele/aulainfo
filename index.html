@@ -101,6 +101,11 @@
       <div class="lang-switcher" onclick="toggleLang()" id="lang-btn">
         <span class="lang-flag">🇦🇷</span> <span class="lang-name">ES</span>
       </div>
+      <div class="theme-selector">
+        <div class="theme-dot" onclick="setTheme('default')" style="background: #10B981" title="Cosmos"></div>
+        <div class="theme-dot" onclick="setTheme('ocean')" style="background: #0EA5E9" title="Océano"></div>
+        <div class="theme-dot" onclick="setTheme('cyber')" style="background: #F43F5E" title="Cyberpunk"></div>
+      </div>
       <button class="btn-logout" onclick="logout()">Salir</button>
 
     </div>
@@ -254,20 +259,6 @@
   </div>
 </div>
 
-<!-- COMMAND PALETTE -->
-<div class="modal-overlay" id="modal-command" style="align-items: flex-start; padding-top: 10vh; background: rgba(0,0,0,0.8)">
-  <div class="command-palette">
-    <div class="command-header">
-      <span style="font-size: 1.2rem">🔍</span>
-      <input type="text" id="command-input" placeholder="Buscar comando, profesor o sección... (Esc)" oninput="searchCommands(this.value)">
-    </div>
-    <div class="command-results" id="command-results"></div>
-    <div class="command-footer">
-      <span><b>ENTER</b> seleccionar</span>
-      <span><b>ESC</b> cerrar</span>
-    </div>
-  </div>
-</div>
 
   <script src="app.js"></script>
   <script src="cosmos.js"></script>

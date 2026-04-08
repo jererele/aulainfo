@@ -1483,24 +1483,16 @@ function openAchievement(title, desc) {
   openModal('modal-logros');
 }
 
-//                 COMMAND PALETTE (LOGIC)                
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.key === 'k') { e.preventDefault(); openModal('modal-command'); document.getElementById('command-input').focus(); }
-  if (e.key === 'Escape') closeModal('modal-command');
-});
-
-function searchCommands(val) {
-  const results = document.getElementById('command-results');
-  if (!val) { results.innerHTML = ''; return; }
-  const options = [
-    {id:'dashboard', label: T('dashboard'), icon:'📊'},
-    {id:'mapa', label: T('mapa'), icon:'📍'},
-    {id:'horarios', label: T('horarios'), icon:'🗓️'},
-    {id:'profesores', label: T('profesores'), icon:'👨‍🏫'}
-  ];
-  const filtered = options.filter(o => o.label.toLowerCase().includes(val.toLowerCase()));
-  results.innerHTML = filtered.map(o => `
-    <div class="command-item" onclick="showPage('${o.id}'); closeModal('modal-command')">
-      <span>${o.icon}</span> ${o.label}
-    </div>`).join('');
+//                 TEMAS (SKINS)                
+function setTheme(theme) {
+  document.body.classList.remove('theme-ocean', 'theme-cyber');
+  if (theme !== 'default') document.body.classList.add(`theme-${theme}`);
+  localStorage.setItem('app-theme', theme);
+  showToast(`Tema ${theme} aplicado`, 'info');
+}
+// Cargar tema guardado
+const savedTheme = localStorage.getItem('app-theme');
+if (savedTheme) {
+  document.body.classList.remove('theme-ocean', 'theme-cyber');
+  if (savedTheme !== 'default') document.body.classList.add(`theme-${savedTheme}`);
 }
