@@ -231,17 +231,48 @@ function buildNav(){
 
 
 
-function showPage(id){
 
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+//                 COMPORTAMIENTO UI                
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const currentScroll = window.pageYOffset;
+  const topbar = document.querySelector('.topbar');
+  if (currentScroll > 50) topbar.classList.add('floating');
+  else topbar.classList.remove('floating');
 
-  const nav = document.getElementById('nav-'+id);
+  if (currentScroll > lastScroll && currentScroll > 200) topbar.classList.add('hidden');
+  else topbar.classList.remove('hidden');
+  lastScroll = currentScroll;
+});
 
-  if(nav) nav.classList.add('active');
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('compact');
+}
 
+// Búsqueda con Debounce
+let searchTimeout;
+function filterTableDebounced(val) {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => filterTable(val), 250);
+}
+
+function showPage(id) {
   const area = document.getElementById('content-area');
-
-  const renders = {
+  // Efecto Skeleton antes de renderizar
+  area.innerHTML = `
+    <div class="page active">
+      <div class="skeleton" style="height:3rem; width:40%; margin-bottom:2rem"></div>
+      <div class="skeleton" style="height:10rem; width:100%; margin-bottom:1rem"></div>
+      <div class="skeleton" style="height:10rem; width:100%"></div>
+    </div>`;
+  
+  setTimeout(() => {
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    const nav = document.getElementById('nav-'+id);
+    if(nav) nav.classList.add('active');
+    if(renders[id]) area.innerHTML = `<div class="page active" style="animation: fadeIn 0.4s ease">${renders[id]()}</div>`;
+  }, 300);
+}
 
     dashboard: renderDashboard,
 

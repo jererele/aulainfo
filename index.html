@@ -91,7 +91,10 @@
 
   <div class="topbar">
 
-    <div class="topbar-logo">Aula<span>Info</span></div>
+    <div class="topbar-logo" style="display:flex;align-items:center;gap:1rem">
+      <button class="btn-icon" onclick="toggleSidebar()" style="background:transparent;border:none;color:var(--text);cursor:pointer;font-size:1.2rem;padding:0.5rem">☰</button>
+      Aula<span>Info</span>
+    </div>
 
     <div class="topbar-right">
 
@@ -163,7 +166,6 @@
       <div class="form-group">
 
         <label class="form-label">Fecha inicio</label>
-
         <input class="form-input" type="date" id="fecha-inicio">
 
       </div>
