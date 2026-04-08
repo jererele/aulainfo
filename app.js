@@ -270,28 +270,21 @@ function showPage(id) {
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     const nav = document.getElementById('nav-'+id);
     if(nav) nav.classList.add('active');
+
+    const renders = {
+      dashboard: renderDashboard,
+      ausencias: renderAusencias,
+      horarios: renderHorarios,
+      profesores: renderProfesores,
+      reportes: renderReportes,
+      'mis-ausencias': renderMisAusencias,
+      'mi-horario': renderMiHorario,
+      'vista-alumno': renderVistaAlumno,
+      'semana-alumno': renderSemanaAlumno,
+      'mapa': renderMapa,
+    };
     if(renders[id]) area.innerHTML = `<div class="page active" style="animation: fadeIn 0.4s ease">${renders[id]()}</div>`;
   }, 300);
-}
-
-    dashboard: renderDashboard,
-
-    ausencias: renderAusencias,
-
-    horarios: renderHorarios,
-
-    profesores: renderProfesores,
-
-    reportes: renderReportes,
-
-    'mis-ausencias': renderMisAusencias,
-    'mi-horario': renderMiHorario,
-    'vista-alumno': renderVistaAlumno,
-    'semana-alumno': renderSemanaAlumno,
-    'mapa': renderMapa,
-  };
-
-  if(renders[id]) area.innerHTML = `<div class="page active">${renders[id]()}</div>`;
 }
 
 function renderDashboard(){
